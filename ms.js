@@ -33,7 +33,7 @@
         let i = 0;
         while (i < numMines) {
             let mine_pos = Math.floor(Math.random() * numButtons);
-            if (mine_pos != bn) {
+            if (mine_pos != bn && mines[mine_pos] != 1) {
                 mines[mine_pos] = 1;
                 i++;
             }
