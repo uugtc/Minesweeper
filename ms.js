@@ -4,7 +4,7 @@
     const side = 8;
     const numButtons = side * side;
     const numMines = 14;
-    
+
 
     const initSetup = () => {
         for (let i = 0; i < numButtons; i++) {
@@ -15,8 +15,8 @@
             newButton.textContent = '?';
             document.getElementById("manyButtons").appendChild(newButton);
         }
-        
-        
+
+
     }
     initSetup();
 
@@ -26,7 +26,7 @@
     let first_click = true;
 
     //---------------------------------------------------------------------//
-    
+
     // Sets up mines and clues. Runs right after initial click.
     const setup = (bn) => {
         // Set mines
@@ -84,17 +84,11 @@
         }
 
     };
-    
+
 
     const sweepHelper = (bn) => {
         $button[bn].classList.add("pushed");
 
-        //let clue = 0;
-        // if (clue != 0) {
-        //     $button[bn].textContent = clue;
-        // }
-        // else {
-        //     $button[bn].textContent = "_";
         let neighbors = [];
         if (Math.floor(bn / side) != 0) {
             // if not in top row, add the button above
@@ -114,7 +108,7 @@
                 }
             }
             // if not in right column
-            if (bn % side != side-1) {
+            if (bn % side != side - 1) {
                 let n4 = parseInt(bn) + 1;
                 if (!$button[n4].classList.contains("pushed")) {
                     neighbors.push(n4);
@@ -143,7 +137,7 @@
                 }
             }
             // if not in right column
-            if (bn % side != side-1) {
+            if (bn % side != side - 1) {
                 let n4 = parseInt(bn) + 1;
                 if (!$button[n4].classList.contains("pushed")) {
                     neighbors.push(n4);
@@ -181,15 +175,15 @@
                 }
             }
         }
-        //}
     }
 
     const sweep = (bn) => {
+
         if (first_click) {
             setup(bn);
             first_click = false;
         }
-        
+
         if (mines[bn]) {
             // Mine! Game Over!
             window.alert("Mine! Game Over!");
@@ -199,16 +193,29 @@
             $button[bn].textContent = clues[bn];
             sweepHelper(bn);
 
-            
+
         }
 
     };
+
+    const checkWin = () => {
+        let unclicked = 0;
+        for (let i = 0; i < numButtons; i++) {
+            if (mines[i] == 0 && !$button[i].classList.contains("pushed")) {
+                unclicked++;
+            }
+        }
+        if (unclicked == 0) {
+            window.alert("You win! You have evaded all mines!");
+            location.reload();
+        }
+    }
 
     /* 
       Click Handler
     */
     const clickHandler = (e) => {
-        
+
         // クリックした要素をピンポイントで取得
         const $this = e.target;
         // data-nav（データセット中のnav属性のもの）の値を取得
@@ -221,24 +228,22 @@
             $this.classList.add("pushed");
             sweep(targetVal);
 
-            let unclicked = 0;
-            for (let i = 0; i < numButtons; i++) {
-                if (mines[i] == 0 && !$button[i].classList.contains("pushed")) {
-                    unclicked++;
-                }
-            }
-            if (unclicked == 0) {
-                window.alert("You win! You have evaded all mines!");
-                location.reload();
-            }
+            setTimeout(() => checkWin(), 1000)
+
         };
     };
 
     let handlerIndex = 0;
 
     while (handlerIndex < numButtons) {
-        $button[handlerIndex].addEventListener("click", (e) => {
-            clickHandler(e);
+        $button[handlerIndex].addEventListener("mousedown", (e) => {
+            if (e.button == 0) {
+                clickHandler(e);
+            }
+            else {
+                console.log("aaa");
+            }
+
         });
         handlerIndex++;
     };
